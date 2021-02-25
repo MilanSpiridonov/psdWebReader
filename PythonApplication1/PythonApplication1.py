@@ -1,10 +1,24 @@
 from psd_tools import PSDImage
 from PIL import Image
+import os
 
 #INIT
-script = '' #HTML code, components will be added later in code
+script = '' #HTML code, components will be added later in code #aligncenter
+script += """<!DOCTYPE html>
+<html>
+<head>
+<style>
+.aligncenter{
+text-align: center;}
+</style>
+<title> Landing Page </title>
+<head>
+<body>
+"""
+
 pathf = 'Materials/test.psd'    #temp path value
 psd = PSDImage.open(pathf)
+imCnt = 0
 #/INIT
 
 for layer in psd:
@@ -21,17 +35,30 @@ for layer in psd:
         except: 
             print('No background color given')
      if layer.kind == 'pixel' and layer.name.split(' ')[0] != 'Canvas': # Parse through images
+            # save im loc
             layer_image = layer.composite()
-            dir = 'Materials/Exit/%s.png' % layer.name
-            layerCtr = (layer.bbox[2] - layer.bbox[0])/2 # Center position of layer
+            dir = 'Materials/Exit/%s.png' % imCnt#layer.name
+            layer_image.save(dir)
+            #
+            layerCtr = layer.bbox[0] + (layer.bbox[2] - layer.bbox[0])/2 # Center position of layer            
             # Get in which third the element is :)
+            print(layerCtr)
+            print(ctr - maxW/10)
             if layerCtr < ctr + maxW/10 and layerCtr > ctr - maxW/10:
-                pos = 'middle' #width: 50%
+                pos = 'middle' #width: 50%                
+                #script += '<img src = \"../Materials/Exit/'+str(imCnt)+'.png\" alt = \"img\" style = \" position: fixed;right:100px; left: 50%\" >\n </img>'                
             elif layerCtr > ctr + maxW/10:
-                pos = 'right' #right: pix diff
+                pos = 'right' #right: % diff # calc the distance from border :)
             elif layerCtr > ctr - maxW/10:
-                pos = 'left' #left: pix diff
+                pos = 'left' #left: % diff   # calc the distance from border :)sf
             # /Get third
-
+            imCnt +=1
             
-         
+script += """</body>
+</html>""" 
+print(script)
+f = open("Materials/test.html", "w")
+f.write(script)
+f.close()
+os.system(r"D:\GameJams\psdWebReader\PythonApplication1\Materials\test.html")
+
