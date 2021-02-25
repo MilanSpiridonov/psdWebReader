@@ -49,28 +49,15 @@ for layer in psd:
             top = (layer.bbox[1]/maxH)*100
             print(top)
             #get posX
-           
-            if layerCtr < ctr + maxW/10 and layerCtr > ctr - maxW/10:
-                pos = 'middle' #width: 50% 
-                padding = 'right: 50%;'
-                #script += '<img src = \"../Materials/Exit/'+str(imCnt)+'.png\" alt = \"img\" style = \" position: fixed;right:100px; left: 50%\" >\n </img>'                
-            elif layerCtr > ctr + maxW/10:
-                pos = 'right' #right: % diff # calc the distance from border :)
-                padTemp = (layer.bbox[0]/maxW)*100
-                print(padTemp)
-                padding = 'left: ' + str(padTemp) + '%;'
-            elif layerCtr < ctr - maxW/10:
-                pos = 'left' #left: % diff   # calc the distance from border :)sf
-                padTemp = (layer.bbox[0]/maxW)*100
-                print(padTemp)
-                padding = 'left: ' + str(padTemp) + '%;'
-          
+            padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
+            
             #get width
             if maxW - layer.bbox[2] < 20 and layer.bbox[0] < 20:
-                width = '100%'
+                width = 'width: 100%'
             else:
-                width = 'auto'
-            script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; width: ' + width + '\">'
+                PercAll = ((layer.bbox[2] - layer.bbox[0])/maxW)*100
+                width = 'min-width: ' + str(PercAll - PercAll/5) + '%; max-width: ' + str(PercAll + PercAll/5) + '%;'
+            script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; ' +width + '\">'
             # /Get third
             imCnt +=1
             
