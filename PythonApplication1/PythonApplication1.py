@@ -57,8 +57,11 @@ for layer in psd:
             else:
                 PercAll = ((layer.bbox[2] - layer.bbox[0])/maxW)*100
                 width = 'min-width: ' + str(PercAll - PercAll/3) + '%; max-width: ' + str(PercAll + PercAll/3) + '%;'
-            script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; ' +width + '\">'
-            # /Get third
+            if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
+                script += '<a href = \"https://www.abv.bg/\" >\n'
+            script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; ' +width + '\">\n'
+            if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
+                script += '</a>\n'
             imCnt +=1
             
 script += """</body>
