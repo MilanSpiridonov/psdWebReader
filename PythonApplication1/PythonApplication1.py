@@ -56,7 +56,7 @@ for layer in psd:
                 width = 'width: 100%'
             else:
                 PercAll = ((layer.bbox[2] - layer.bbox[0])/maxW)*100
-                width = 'min-width: ' + str(PercAll - PercAll/5) + '%; max-width: ' + str(PercAll + PercAll/5) + '%;'
+                width = 'min-width: ' + str(PercAll - PercAll/3) + '%; max-width: ' + str(PercAll + PercAll/3) + '%;'
             script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; ' +width + '\">'
             # /Get third
             imCnt +=1
