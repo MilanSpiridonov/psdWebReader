@@ -10,6 +10,7 @@ script += """<!DOCTYPE html>
 <style>
 .aligncenter{
 text-align: center;}
+a:hover{opacity: .75;}
 </style>
 <title> Landing Page </title>
 <head>
@@ -21,6 +22,7 @@ psd = PSDImage.open(pathf)
 imCnt = 0
 siteName = ''
 headerScr = ''
+headrPx = 0
 
 for layer in psd:
     if layer.name.split(' ')[0] == 'Canvas': #There's one layer named 'Canvas', where we get different info on positions and stuff
@@ -41,12 +43,12 @@ for layer in psd:
         f = layer.bbox[3]- layer.bbox[1]
         top =layer.bbox[1]#(f/maxH)*100#-layer.bbox[1] str(layer.bbox[0]/2)
         padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
-        headerScr = '<h1 style = \"font-size: 48px;position:fixed; '+ str(padding) + 'top: ' + str(top) + 'px; margin-top: ' + str(0) + 'px\">' + siteName + '</h1>'
+        headerScr = '<h1 style = \"font-size: 48px;position:absolute; '+ str(padding) + 'top: ' + str(top) + 'px; margin-top: ' + str(0) + 'px\">' + siteName + '</h1>'
         script += headerScr
         break
 #/INIT
 
-
+ 
 
 for layer in psd:
      if layer.kind == 'pixel' and layer.name.split(' ')[0] != 'Canvas': # Parse through images
@@ -61,7 +63,7 @@ for layer in psd:
             print(layerCtr)
             print(ctr - maxW/10)
             #top = layer.bbox[1]
-            top = (layer.bbox[1]/maxH)*100
+            top = layer.bbox[1] - headrPx #(layer.bbox[1]/maxH)*100
             print(top)
             #get posX
             padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
@@ -74,11 +76,12 @@ for layer in psd:
                     width = 'min-width: ' + str(PercAll - PercAll/3) + '%; max-width: ' + str(PercAll + PercAll/3) + '%;'
                 if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
                     script += '<a href = \"https://www.abv.bg/\" >\n'
-                script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: absolute; ' + padding + ' top: ' + str(top) + '%; ' +width + '\">\n'
+                script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" position: fixed; ' + padding + ' margin-top: ' + str(top) + 'px; ' + width + '\">\n'
                 if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
                     script += '</a>\n'
             else:
                 height = layer.bbox[3]/2
+                headrPx = height*2
                 script += '<div style = \"padding:' + str(height) + 'px; margin-top: 0px; background: #' +  layer.name.split(' ')[1] + ';\">\n'
                 #script += headerScr
                 script += '</div>'
@@ -87,7 +90,20 @@ for layer in psd:
                 #script += '<h1 style = \ font-size:large;\">' + siteName + '</h1>'
                 #class = \"header\"
             imCnt +=1
-            
+      
+     elif layer.kind == 'type' and layer.name != 'SiteName':
+            fontSize = layer.name.split(' ')[1]
+            try:
+                if layer.name.split(' ')[2] == 'ctr':
+                    allignment = 'text-align: center;'
+            except:
+                allignment = ''
+            text = layer.text
+            TextmaxH = layer.bbox[3] - layer.bbox[1]
+            TextmaxW = layer.bbox[2] - layer.bbox[0]
+            TextmaxW += TextmaxW/5 
+            padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
+            script += '<p style = \"position: absolute;'+ padding + 'max-height: ' +  str(TextmaxH) + 'px;max-width: ' +str(TextmaxW)+ 'px;font-size: ' + fontSize + '; ' + allignment + '\">' + text + '</p>\n'
 script += """</body>
 </html>""" 
 print(script)
