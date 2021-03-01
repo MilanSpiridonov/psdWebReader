@@ -66,7 +66,7 @@ for layer in psd:
             print(layerCtr)
             print(ctr - maxW/10)
             #top = layer.bbox[1]
-            top = layer.bbox[1] - headrPx #(layer.bbox[1]/maxH)*100
+            top = layer.bbox[1]# - headrPx #(layer.bbox[1]/maxH)*100
             print(top)
             #get posX
             padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
@@ -76,7 +76,7 @@ for layer in psd:
                     width = 'width: 100%'
                 else:
                     PercAll = ((layer.bbox[2] - layer.bbox[0])/maxW)*100
-                    width = 'min-width: ' + str(PercAll - PercAll/3) + '%; max-width: ' + str(PercAll + PercAll/3) + '%;'
+                    width = ''#'min-width: ' + str(PercAll - PercAll/3) + '%; max-width: ' + str(PercAll + PercAll/3) + '%;'
                 if 'Butt' in layer.name:
                     posA = 'position: absolute;'
                 else:
@@ -84,7 +84,7 @@ for layer in psd:
                 if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
                     script += '<a href = \"https://www.abv.bg/\" >\n'
                     posA = 'position: absolute;' #sets position value
-                script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" ' + posA + ' ' + padding + ' margin-top: ' + str(top) + 'px; ' + width + '\">\n'
+                script += '<img src = \"../Materials/Exit/' + str(imCnt) + '.png\" alt = \"img\" style = \" ' + posA + ' ' + padding + ' top: ' + str(top) + 'px; ' + width + '\">\n'
                 if 'Button' in layer.name: #This is a fucking abomination, not sure how to replace :/
                     script += '</a>\n'
             else:
@@ -100,30 +100,32 @@ for layer in psd:
             imCnt +=1
       
      elif layer.kind == 'type' and layer.name != 'SiteName':
-            fontSize = int(layer.name.split(' ')[1])*1.17
+            fontSize = int(layer.name.split(' ')[1])*1.08
             try:
                 if layer.name.split(' ')[2] == 'center':
                     allignment = 'text-align: center;'
                 elif layer.name.split(' ')[2] == 'left':
                     allignment = 'text-align: left;'
-                elif layer.name.split(' ')[2] == 'right':
+                elif layer.name.split(' ')[2] == 'right':                    
                     allignment = 'text-align: right;'
             except:
                 allignment = ''
             text = layer.text
+            padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
             print(text)
             TextmaxH = layer.bbox[3] - layer.bbox[1]
             TextmaxW = layer.bbox[2] - layer.bbox[0]
             TextmaxW += TextmaxW*.25
-            padding = 'left: ' + str((layer.bbox[0]/maxW)*100) + '%;'
-            top = layer.bbox[1]/maxH
+            
+            top = layer.bbox[1]
             print('\n')
             print(top)
             print('\n')
             #top = 'top: initial;'
-            script += '<p style = \"line-height: ' +  str(fontSize/1.15) + 'px;position: absolute; top: ' + str(top*100) + '%;' + padding + 'max-height: ' +  str(TextmaxH) + 'px;max-width: ' +str(TextmaxW)+ 'px;font-size: ' + str(fontSize) + 'px; ' + allignment + '\"> \n'
+            script += '<p style = \"line-height: ' +  str(fontSize/1.15) + 'px;position: absolute; margin-top: 0px; top: ' + str(top) + 'px;' + padding + 'max-height: ' +  str(TextmaxH) + 'px;max-width: ' +str(TextmaxW)+ 'px;font-size: ' + str(fontSize) + 'px; ' + allignment + '\"> \n'
             for l in text.split('\r'):
                 script += l + '<br>'
+            #script += '<a href=''>short link here</a>' <--- links inside <p> tag 
             script += '</p>\n'
 
 script += """</body>
@@ -133,4 +135,3 @@ f = open("Materials/test.html", "w")
 f.write(script)
 f.close()
 os.system(r"D:\GameJams\psdWebReader\PythonApplication1\Materials\test.html")
-
